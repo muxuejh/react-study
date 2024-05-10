@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import classNames from 'classnames'
 import './app.css'
+import A from './components/componentCommunication/A'
 
 const style = {
   color: 'red',
-  fontSize: '20px'
+  fontSize: '20px',
 }
 
 function Button() {
@@ -16,10 +17,10 @@ const Button1 = () => {
 
 function App() {
   const list = [1, 2, 3, 4, 5]
-  const listDom = list.map(item => <li key={item}>{item}</li>)
+  const listDom = list.map((item) => <li key={item}>{item}</li>)
   const isLoading = true
 
-  const handleClick1 = e => {
+  const handleClick1 = (e) => {
     console.log('click', e)
   }
 
@@ -41,12 +42,33 @@ function App() {
     setArr(arr.splice(0, 1))
   }
 
+  /**
+   * 受控表单绑定
+   */
+  const [iptValue, setIptValue] = useState('')
+
+  /**
+   * 获取DOM
+   */
+  const inputRef = useRef(null)
+  const getDOM = () => {
+    console.dir(inputRef.current)
+  }
+
+  /**
+   * 父子组件通信--子传父
+   */
+  const [childVal, setChildVal] = useState('子传父')
+  const getMsg = (msg) => {
+    setChildVal(msg)
+  }
+
   return (
-    <div className="App">
+    <div className='App'>
       {/* 列表渲染 */}
       <h2>列表渲染</h2>
       <ul>
-        {list.map(item => (
+        {list.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
@@ -60,7 +82,7 @@ function App() {
       {/* 事件处理 */}
       <h2>事件处理</h2>
       <button onClick={handleClick1}>点击</button>
-      <button onClick={e => handleClick2(e, '张三')}>点击-传递参数</button>
+      <button onClick={(e) => handleClick2(e, '张三')}>点击-传递参数</button>
 
       {/* 组件 */}
       <h2>组件</h2>
@@ -79,13 +101,30 @@ function App() {
       <h2>样式</h2>
       <div style={{ color: 'red', fontSize: '20px' }}>七里香</div>
       <div style={style}>晴天</div>
-      <div className="foo">搁浅</div>
+      <div className='foo'>搁浅</div>
 
       {/* 动态class */}
       <h2>动态class</h2>
       <div className={`foo ${count % 2 !== 0 && 'active'}`}>你比从前快乐</div>
       {/* 使用classnames库优化写法 */}
       <div className={classNames('foo', { active: count % 2 !== 0 })}>你比从前快乐</div>
+
+      {/* 受控表单绑定 */}
+      <h2>受控表单绑定</h2>
+      <input type='text' value={iptValue} onChange={(e) => setIptValue(e.target.value)} />
+      <span>{iptValue}</span>
+
+      {/* 获取DOM元素 */}
+      <h2>获取DOM元素</h2>
+      <input type='text' ref={inputRef} />
+      <button onClick={getDOM}>获取DOM</button>
+
+      {/* 父子组件通信 */}
+      <h2>父子组件通信</h2>
+      <A message={'父传子'} onGetSonMsg={getMsg}>
+        <span>你好</span>
+      </A>
+      <span>{childVal}</span>
     </div>
   )
 }
