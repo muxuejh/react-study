@@ -5,6 +5,7 @@ import A from './components/componentCommunication/A'
 import B from './components/componentCommunication/B'
 import UseEffectCmp from './components/UseEffectCmp'
 import CustomHook from './components/CustomHook'
+import ReduxCmp from './components/redux'
 
 const style = {
   color: 'red',
@@ -156,6 +157,9 @@ function App() {
       {/* 自定义hook */}
       <h2>自定义hook</h2>
       <CustomHook />
+      {/* redux */}
+      <h2>redux</h2>
+      <ReduxCmp />
     </div>
   )
 }
