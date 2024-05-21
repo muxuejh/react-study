@@ -14,9 +14,9 @@ npm i -D @craco/craco
 module.exports = {
   webpack: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
-  }
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
 }
 ```
 
@@ -44,4 +44,29 @@ module.exports = {
 }
 ```
 
-`
+### json-server 模拟接口
+
+1. 安装 json-server
+
+```shell
+npm i -D json-server
+```
+
+2. 准备一个 json 文件
+
+3. 添加启动命令
+   package.json
+
+```shell
+  "server": "json-server ./server/db.json --port 3001"
+```
+
+4. 启动服务
+
+```shell
+  npm run server
+```
+
+运行之后就可通过本地访问模拟接口了
+
+运行报错安装版本 0.17.4
