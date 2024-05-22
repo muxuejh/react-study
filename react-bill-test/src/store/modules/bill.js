@@ -17,7 +17,7 @@ const { setBillList } = billStore.actions
 
 const getBillList = () => {
   return async (dispatch) => {
-    const res = axios.get('http://localhost:3001/ka')
+    const res = await axios.get('http://localhost:3001/ka')
     dispatch(setBillList(res.data))
   }
 }
