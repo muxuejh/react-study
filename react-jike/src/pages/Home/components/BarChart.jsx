@@ -9,29 +9,29 @@ export default function BarChart({ title }) {
     // 2. 准备图表参数
     const option = {
       title: {
-        text: title
+        text: title,
       },
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       series: [
         {
           data: [120, 200, 150, 80, 70, 110, 130],
-          type: 'bar'
-        }
-      ]
+          type: 'bar',
+        },
+      ],
     }
     // 3. 渲染参数
     myChart.setOption(option)
-  }, [])
+  }, [title])
 
   return (
     <div>
-      <div id="aa" ref={chartRef} style={{ width: '400px', height: '300px' }} />
+      <div id='aa' ref={chartRef} style={{ width: '400px', height: '300px' }} />
     </div>
   )
 }
