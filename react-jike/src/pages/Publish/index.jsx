@@ -5,19 +5,13 @@ import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import React from 'react'
-import { addArticleApi, getChannelApi } from '@/apis/article'
+import { addArticleApi } from '@/apis/article'
+import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
 
 export default function Publish() {
-  const [channelList, setChannelList] = React.useState([])
-  React.useEffect(() => {
-    getChannelList()
-  }, [])
-  const getChannelList = async () => {
-    const res = await getChannelApi()
-    setChannelList(res.data.channels)
-  }
+  const { channelList } = useChannel()
 
   const [imageType, setImageType] = React.useState(0)
   const onTypeChange = (e) => {

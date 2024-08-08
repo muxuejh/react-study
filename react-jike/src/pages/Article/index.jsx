@@ -4,57 +4,13 @@ import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
+import { useChannel } from '@/hooks/useChannel'
+import React from 'react'
+import { getArticleListApi } from '@/apis/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
-const columns = [
-  {
-    title: '封面',
-    dataIndex: 'cover',
-    width: 120,
-    render: (cover) => {
-      return <img src={cover.images[0] || img404} width={80} height={60} alt='' />
-    },
-  },
-  {
-    title: '标题',
-    dataIndex: 'title',
-    width: 220,
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    render: (data) => <Tag color='green'>审核通过</Tag>,
-  },
-  {
-    title: '发布时间',
-    dataIndex: 'pubdate',
-  },
-  {
-    title: '阅读数',
-    dataIndex: 'read_count',
-  },
-  {
-    title: '评论数',
-    dataIndex: 'comment_count',
-  },
-  {
-    title: '点赞数',
-    dataIndex: 'like_count',
-  },
-  {
-    title: '操作',
-    render: (data) => {
-      return (
-        <Space size='middle'>
-          <Button type='primary' shape='circle' icon={<EditOutlined />} />
-          <Button type='primary' danger shape='circle' icon={<DeleteOutlined />} />
-        </Space>
-      )
-    },
-  },
-]
 // 准备表格body数据
 const data = [
   {
@@ -72,6 +28,72 @@ const data = [
 ]
 
 const Article = () => {
+  const status = {
+    1: <Tag color='warning'>待审核</Tag>,
+    2: <Tag color='success'>审核通过</Tag>,
+  }
+
+  const columns = [
+    {
+      title: '封面',
+      dataIndex: 'cover',
+      width: 120,
+      render: (cover) => {
+        return <img src={cover.images[0] || img404} width={80} height={60} alt='' />
+      },
+    },
+    {
+      title: '标题',
+      dataIndex: 'title',
+      width: 220,
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      render: (data) => status[data],
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'pubdate',
+    },
+    {
+      title: '阅读数',
+      dataIndex: 'read_count',
+    },
+    {
+      title: '评论数',
+      dataIndex: 'comment_count',
+    },
+    {
+      title: '点赞数',
+      dataIndex: 'like_count',
+    },
+    {
+      title: '操作',
+      render: (data) => {
+        return (
+          <Space size='middle'>
+            <Button type='primary' shape='circle' icon={<EditOutlined />} />
+            <Button type='primary' danger shape='circle' icon={<DeleteOutlined />} />
+          </Space>
+        )
+      },
+    },
+  ]
+
+  const { channelList } = useChannel()
+
+  const [articleList, setArticleList] = React.useState([])
+  const [count, setCount] = React.useState(0)
+  const getArticleList = async () => {
+    const res = await getArticleListApi()
+    setArticleList(res.data.results)
+    setCount(res.data.total_count)
+  }
+  React.useEffect(() => {
+    getArticleList()
+  }, [])
+
   return (
     <div>
       <Card
@@ -88,9 +110,12 @@ const Article = () => {
           </Form.Item>
 
           <Form.Item label='频道' name='channel_id'>
-            <Select placeholder='请选择文章频道' defaultValue='lucy' style={{ width: 120 }}>
-              <Option value='jack'>Jack</Option>
-              <Option value='lucy'>Lucy</Option>
+            <Select placeholder='请选择文章频道' style={{ width: 120 }}>
+              {channelList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
@@ -107,8 +132,8 @@ const Article = () => {
         </Form>
       </Card>
 
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey='id' columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey='id' columns={columns} dataSource={articleList} />
       </Card>
     </div>
   )
